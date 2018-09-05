@@ -2,7 +2,7 @@ import pylab
 import random
 import os
 import imageio
-
+import numpy as np
 def selectionsort_anim(a):
     x = range(len(a))
     for j in range(len(a)-1):
@@ -28,15 +28,13 @@ for file_name in os.listdir(png_dir):
     if(i<10):
         num_str = str(i)
         name_file = name + "0" + num_str + ".png"
-        print(name_file)
     else:
         num_str = str(i)
         name_file = name + num_str+".png"
-        print(name_file)
-    if os.path.basename(name_file):
-        file_path = os.path.join(png_dir, file_name)
+    if os.path.abspath(name_file):
+        file_path = os.path.join(png_dir, name_file)
         images.append(imageio.imread(file_path))
 
     i+=1
 
-imageio.mimsave('grics.gif', images)
+imageio.mimsave('grics.gif', images, duration = 0.5)
