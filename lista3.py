@@ -1,40 +1,53 @@
-import pylab
-import random
-import os
-import imageio
+import pylab, random
 import numpy as np
-def selectionsort_anim(a):
-    x = range(len(a))
-    for j in range(len(a)-1):
-        iMin = j
-        for i in range(j+1,len(a)):
-            if a[i] < a[iMin]: 
-                iMin = i
-            if iMin != j:
-                a[iMin], a[j] = a[j], a[iMin]
+import imageio
+import os, re
 
-        pylab.plot(x,a,'k.',markersize=6)
+def quick_sort(list_for_sort,start, end,k):
+    x = range(len(list_for_sort))
+    i = start
+    j = end-1
+    pivot = list_for_sort[start]
+    while(i<=j):
+        while(list_for_sort[i]<pivot and i<end):
+            i +=1
+
+        while(list_for_sort[j]>pivot and j>start):
+            j -=1
+       
+        if(i<=j):
+            list_for_sort[i], list_for_sort[j] = list_for_sort[j], list_for_sort[i]
+            i +=1
+            j -=1
+    if(j> start):
+        pylab.plot(x,list_for_sort,'k.',markersize=6)
         pylab.savefig("images/img" + '%04d' % j + ".png")
         pylab.clf()
+        k +=1
+        quick_sort(list_for_sort,start,j+1,k )
+    if(i<end):
+        pylab.plot(x,list_for_sort,'k.',markersize=6)
+        pylab.savefig("images/img" + '%04d' % j + ".png")
+        pylab.clf()
+        k+=1
+        quick_sort(list_for_sort, i, end,k )
 
-a = random.sample(range(1000),100)
-selectionsort_anim(a)
-png_dir = 'images/'
+values = random.sample(range(1000),100)
+
+k = 0
+quick_sort(values,0,100,k)
+
+png_dir = "images/"
 images = []
-name = "img00"
-i = 0;
-for file_name in os.listdir(png_dir):
+files = os.listdir(png_dir)
+ordered_files = sorted(files, key=lambda x: (int(re.sub('\D','',x)),x))
+for file_name in ordered_files:
+    file_path = os.path.join(png_dir, file_name)
+    images.append(imageio.imread(file_path))
 
-    if(i<10):
-        num_str = str(i)
-        name_file = name + "0" + num_str + ".png"
-    else:
-        num_str = str(i)
-        name_file = name + num_str+".png"
-    if os.path.abspath(name_file):
-        file_path = os.path.join(png_dir, name_file)
-        images.append(imageio.imread(file_path))
-
-    i+=1
 
 imageio.mimsave('grics.gif', images, duration = 0.5)
+
+
+
+
