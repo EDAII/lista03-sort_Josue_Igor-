@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 def shell_sort(list_number):
-     
+
     list_size = len(list_number)
     gap = list_size//2
- 
+
     while gap > 0:
- 
+
         for i in range(gap,list_size):
- 
+
             temp = list_number[i]
             yield list_number
             j = i
@@ -19,7 +19,43 @@ def shell_sort(list_number):
                 j -= gap
             list_number[j] = temp
         gap //= 2
-    
+
+def merge_sort(list_number, start, end):
+    if end <= start:
+        return
+
+    middle = start + ((end - start + 1) // 2) - 1
+    yield from merge_sort(list_number, start, middle)
+    yield from merge_sort(list_number, middle + 1, end)
+    yield from merge(list_number, start, middle, end)
+    yield list_number
+
+def merge(list_number, start, middle, end):
+
+    merged = []
+    left_list = start
+    right_list = middle + 1
+
+    while left_list <= middle and right_list <= end:
+        if list_number[left_list] < list_number[right_list]:
+            merged.append(list_number[left_list])
+            left_list += 1
+        else:
+            merged.append(list_number[right_list])
+            right_list += 1
+
+    while left_list <= middle:
+        merged.append(list_number[left_list])
+        left_list += 1
+
+    while right_list <= end:
+        merged.append(list_number[right_list])
+        right_list += 1
+
+    for i, sorted_val in enumerate(merged):
+        list_number[start + i] = sorted_val
+        yield list_number
+
 
 if __name__ == "__main__":
     a = [x + 1 for x in range(100)]
@@ -27,6 +63,7 @@ if __name__ == "__main__":
     random.shuffle(a)
     N = len(a)
     title = "Shell sort"
+    # generator = merge_sort(a, 0, 100 - 1)
     generator = shell_sort(a)
 
     fig, ax = plt.subplots()
@@ -51,4 +88,3 @@ if __name__ == "__main__":
         fargs=(bar_rects, iteration), frames=generator, interval=1,
         repeat=False)
     plt.show()
-
