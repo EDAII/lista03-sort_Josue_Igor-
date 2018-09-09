@@ -58,28 +58,38 @@ def merge(list_number, start, middle, end):
 
 
 if __name__ == "__main__":
-    a = [x + 1 for x in range(100)]
-    random.seed(time.time())
-    random.shuffle(a)
-    N = len(a)
-    title = "Shell sort"
-    # generator = merge_sort(a, 0, 100 - 1)
-    generator = shell_sort(a)
+    numbers_elements = int(input("Digite o numero de elementos a serem ordenados: "))
+    algorithm_sorted_type = "Escolha o algoritimo de ordenacao:\n(m)erge \n(s)hell\n"
+    method = input(algorithm_sorted_type)
+
+    list_numbers = random.sample(range(numbers_elements), numbers_elements)
+    # list_numbers = [x + 1 for x in range(numbers_elements)]
+    # random.seed(time.time())
+    # random.shuffle(list_numbers)
+
+    if method == "s":
+        title_algorithm = "Shell sort"
+        generator = shell_sort(list_numbers)
+    elif method == "m":
+        title_algorithm = "Merge sort"
+        generator = merge_sort(list_numbers, 0, numbers_elements - 1)
+    else:
+        print("Opcao Invalida")
 
     fig, ax = plt.subplots()
-    ax.set_title(title)
+    ax.set_title(title_algorithm)
 
 
-    bar_rects = ax.bar(range(len(a)), a, align="edge")
+    bar_rects = ax.bar(range(len(list_numbers)), list_numbers, align="edge")
 
-    ax.set_xlim(0, N)
-    ax.set_ylim(0, int(1.07 * N))
+    ax.set_xlim(0, numbers_elements)
+    ax.set_ylim(0, int(1.07 * numbers_elements))
 
     text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
 
     iteration = [0]
-    def update_fig(a, rects, iteration):
-        for rect, val in zip(rects, a):
+    def update_fig(list_numbers, rects, iteration):
+        for rect, val in zip(rects, list_numbers):
             rect.set_height(val)
         iteration[0] += 1
         text.set_text("# of operations: {}".format(iteration[0]))
